@@ -5,12 +5,14 @@ import type { TenantTable } from "../domain/tenant/tenant.table";
 import type { UserTable } from "../domain/user/user.table";
 import type { RoleTable } from "../domain/role/role.table";
 import type { UserRoleTable } from "../domain/user-role/user-role.table";
+import { PhoneTable } from "../domain/phone/phone.table";
 
 export interface Database {
   tenants: TenantTable;
   users: UserTable;
   roles: RoleTable;
   user_roles: UserRoleTable;
+  phones: PhoneTable;
 }
 
 const pool = new Pool({
