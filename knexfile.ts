@@ -9,6 +9,7 @@ const config: Record<string, Knex.Config> = {
       database: process.env.DB_NAME,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      ssl: Boolean(process.env.DB_SSLMODE)
     },
     pool: { min: 2, max: 10 },
     migrations: { tableName: "knex_migrations" },
