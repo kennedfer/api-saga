@@ -1,74 +1,71 @@
 // apikey: "429683C4C977415CAAFCCE10F7D57E11
 
+import { NewPhone } from "../../domain/phone/phone.table";
+import { BadRequestError, NotFoundError } from "../errors";
 import { phoneRepo } from "../phone/phone.repo";
+import { Trace } from "../tracing";
+import { api } from "../utils/axios";
 
 class WhatsappService {
-  async connect(phoneId: string) {
-    const response = await fetch(
-      process.env.EVOLUTION_API_PATH + "/instance/connect/" + phoneId,
-      {
-        method: "get",
-        headers: {
-          apikey: "mude-me", // AUTHENTICATION_API_KEY
-          "Content-Type": "application/json",
-        },
+  @Trace({ spanName: "whatsappService.create" })
+  async create(input: NewPhone) {
+    try {
+      const phoneId = await phoneRepo.insertPhone(input);
+
+      const { data } = await api.post("/instance/create", {
+        instanceName: phoneId,
+        number: input.phone_number,
+        integration: "WHATSAPP-BAILEYS",
+        qrcode: true,
+      });
+
+      return {
+        instance: data.instance,
+        qrcode: data.qrcode,
+      };
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        throw new BadRequestError("Validation error", { cause: error });
       }
-    );
-
-    const data = (await response.json()) as any;
-    console.log(data);
-
-    return data;
-  }
-
-  async disconnect(phoneId: string) {
-    const response = await fetch(
-      process.env.EVOLUTION_API_PATH + "/instance/delete/" + phoneId,
-      {
-        method: "DELETE",
-        headers: {
-          apikey: "mude-me", // AUTHENTICATION_API_KEY
-          "Content-Type": "application/json",
-        },
+      if (error.code === "23505") {
+        throw new BadRequestError("Phone already exists", { cause: error });
       }
-    );
-
-    const data = (await response.json()) as any;
-
-    if (!data.error) {
-      phoneRepo.deletePhone(phoneId);
+      throw error;
     }
-
-    console.log(data);
-    return data;
   }
 
-  async create(instanceName: string, number: string) {
-    const response = await fetch(
-      process.env.EVOLUTION_API_PATH + "/instance/create",
-      {
-        method: "post",
-        headers: {
-          apikey: "mude-me", // AUTHENTICATION_API_KEY
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          instanceName, // nome único da instância (acho que devo juntar de algum modo com o userId para pessoas diferentes terem instancias com mesmo nome)
-          number,
-          integration: "WHATSAPP-BAILEYS",
-          qrcode: true,
-        }),
+  @Trace({ spanName: "whatsappService.connect" })
+  async connect(phoneId: string) {
+    try {
+      const { data } = await api.get(`/instance/connect/${phoneId}`);
+      return data;
+    } catch (error: any) {
+      if (error.status === 404) {
+        throw new NotFoundError("Whatsapp instance");
       }
-    );
 
-    const data = (await response.json()) as any;
+      throw error;
+    }
+  }
 
-    console.log(data);
+  @Trace({ spanName: "whatsappService.disconnect" })
+  async disconnect(phoneId: string) {
+    try {
+      const { data } = await api.delete(`/instance/delete/${phoneId}`);
 
-    return {
-      instance: data.instance,
-      qrcode: data.qrcode,
-    };
+      if (!data?.error) {
+        await phoneRepo.deletePhone(phoneId);
+      }
+
+      console.log(data);
+      return data;
+    } catch (error: any) {
+      if (error.status === 404) {
+        throw new NotFoundError("Whatsapp instance");
+      }
+
+      throw error;
+    }
   }
 }
 
