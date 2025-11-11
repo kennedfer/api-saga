@@ -1,14 +1,12 @@
 import { Router, type Router as ExpressRouter } from "express";
-import { requireRole } from "../middlewares/auth";
-import { paymentService } from "./payments.service";
 import { paymentController } from "./payments.controller";
 
-const userRoutes: ExpressRouter = Router();
+const paymentsRoutes: ExpressRouter = Router();
 // validateSchema({ body: createUserSchema })
-userRoutes.post(
-  "/webhook/api",
-  requireRole("User"),
-  paymentService.processWebhook.bind(paymentController)
+paymentsRoutes.post(
+  "/webhook/pix",
+  paymentController.processWebhook.bind(paymentController)
 );
 
-export { userRoutes };
+
+export { paymentsRoutes };
