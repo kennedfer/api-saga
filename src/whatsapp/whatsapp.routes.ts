@@ -4,14 +4,19 @@ import { whatsappController, WhatsappController } from "./whatsapp.controller";
 const whatsappRoutes: ExpressRouter = Router();
 
 //Por o "/Whatsapp" no prefix
-whatsappRoutes.get(
-  "/create/:phone_id",
+whatsappRoutes.post(
+  "/create",
   whatsappController.create.bind(whatsappController)
 );
 
-whatsappRoutes.post(
+whatsappRoutes.get(
   "/connect/:phone_id",
-  whatsappController.connectNumber.bind(whatsappController)
+  whatsappController.connect.bind(whatsappController)
+);
+
+whatsappRoutes.delete(
+  "/disconnect/:phone_id",
+  whatsappController.disconnect.bind(whatsappController)
 );
 
 export { whatsappRoutes };
