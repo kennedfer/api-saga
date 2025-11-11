@@ -8,6 +8,9 @@ import { userRoutes } from "./user/user.routes";
 import { initializeTracing } from "./tracing";
 import { whatsappRoutes } from "./whatsapp/whatsapp.routes";
 import { whatsappController } from "./whatsapp/whatsapp.controller";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 // Inicializar tracing antes de qualquer outra coisa
 initializeTracing();
