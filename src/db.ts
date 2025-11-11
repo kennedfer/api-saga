@@ -6,6 +6,7 @@ import type { UserTable } from "../domain/user/user.table";
 import type { RoleTable } from "../domain/role/role.table";
 import type { UserRoleTable } from "../domain/user-role/user-role.table";
 import { PhoneTable } from "../domain/phone/phone.table";
+import type { UserPlanTable } from "../domain/user-plan/user-plan.table";
 
 export interface Database {
   tenants: TenantTable;
@@ -13,6 +14,7 @@ export interface Database {
   roles: RoleTable;
   user_roles: UserRoleTable;
   phones: PhoneTable;
+  user_plans: UserPlanTable;
 }
 
 const pool = new Pool({
@@ -31,5 +33,3 @@ export const db = new Kysely<Database>({
 export async function destroyDb(): Promise<void> {
   await pool.end();
 }
-
-
