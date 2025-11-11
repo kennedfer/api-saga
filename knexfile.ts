@@ -5,13 +5,14 @@ const config: Record<string, Knex.Config> = {
     client: "pg",
     connection: {
       host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 5432,
       database: process.env.DB_NAME,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD
+      password: process.env.DB_PASSWORD,
     },
     pool: { min: 2, max: 10 },
     migrations: { tableName: "knex_migrations" },
-    seeds: { directory: "./seeds" }
+    seeds: { directory: "./seeds" },
   },
   staging: {
     client: "pg",
@@ -19,11 +20,11 @@ const config: Record<string, Knex.Config> = {
       host: process.env.DB_HOST,
       database: process.env.DB_NAME,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD
+      password: process.env.DB_PASSWORD,
     },
     pool: { min: 2, max: 10 },
     migrations: { tableName: "knex_migrations" },
-    seeds: { directory: "./seeds" }
+    seeds: { directory: "./seeds" },
   },
   production: {
     client: "pg",
@@ -31,12 +32,12 @@ const config: Record<string, Knex.Config> = {
       host: process.env.DB_HOST,
       database: process.env.DB_NAME,
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD
+      password: process.env.DB_PASSWORD,
     },
     pool: { min: 2, max: 10 },
     migrations: { tableName: "knex_migrations" },
-    seeds: { directory: "./seeds" }
-  }
+    seeds: { directory: "./seeds" },
+  },
 };
 
 export default config;
