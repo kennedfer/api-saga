@@ -7,6 +7,7 @@ import type { RoleTable } from "../domain/role/role.table";
 import type { UserRoleTable } from "../domain/user-role/user-role.table";
 import { PhoneTable } from "../domain/phone/phone.table";
 import type { UserPlanTable } from "../domain/user-plan/user-plan.table";
+import { PaymentsHistoryTable } from "../domain/payments_history/payments-history.table";
 
 export interface Database {
   tenants: TenantTable;
@@ -15,6 +16,7 @@ export interface Database {
   user_roles: UserRoleTable;
   phones: PhoneTable;
   user_plans: UserPlanTable;
+  payments_history: PaymentsHistoryTable;
 }
 
 const pool = new Pool({
