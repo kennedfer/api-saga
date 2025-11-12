@@ -10,6 +10,7 @@ export interface UserTable {
     id: Generated<string>
     tenant_id: string | null // affiliate_id
     email: string
+    cpf: string
     password_hash: string
     created_at: ColumnType<Date, Date | undefined, never>
 }

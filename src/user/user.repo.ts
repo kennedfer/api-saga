@@ -87,6 +87,15 @@ export class UserRepo {
       throw new InternalServerError("Failed to get user by email", { cause: error });
     }
   }
+
+  @Trace({ spanName: "userRepo.getUserByCpf" })
+  async getUserByCpf(cpf: string): Promise<User | undefined> {
+    try {
+      return await db.selectFrom("users").selectAll().where("cpf", "=", cpf).executeTakeFirst();
+    } catch (error: any) {
+      throw new InternalServerError("Failed to get user by cpf", { cause: error });
+    }
+  }
 }
 
 export const userRepo = new UserRepo();
