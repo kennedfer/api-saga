@@ -13,16 +13,23 @@ import { Trace } from "../tracing";
 // };
 
 export class PaymentController {
-  @Trace({spanName: "paymentController.processWebhook"})
+  @Trace({ spanName: "paymentController.processWebhook" })
   async processWebhook(req: Request, res: Response) {
-    const socket = req.socket as TLSSocket;
-    // if (!socket.authorized) return res.sendStatus(401);
+    const body = req.body;
 
-    try {
-      await paymentService.processPayment(req.body);
-      res.sendStatus(200);
-    } catch (err) {
-      res.sendStatus(500);
+    console.log(body);
+
+    switch (body.event) {
+      case "PAYMENT_CONFIRMED":
+        const payment = body.payment;
+        const response = await paymentService.processPayment(payment);
+
+        console.log("resposta: " + JSON.stringify(response));
+        return res.json(response);
+
+      default:
+        console.log("ai cali");
+        return res.status(200).end();
     }
   }
 }
