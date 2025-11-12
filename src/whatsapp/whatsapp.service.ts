@@ -1,10 +1,8 @@
-// apikey: "429683C4C977415CAAFCCE10F7D57E11
-
 import { NewPhone } from "../../domain/phone/phone.table";
 import { BadRequestError, NotFoundError } from "../errors";
 import { phoneRepo } from "../phone/phone.repo";
 import { Trace } from "../tracing";
-import { api } from "../utils/axios";
+import { evolutionApi } from "../utils/axios";
 
 class WhatsappService {
   @Trace({ spanName: "whatsappService.create" })
@@ -12,7 +10,7 @@ class WhatsappService {
     try {
       const phoneId = await phoneRepo.insertPhone(input);
 
-      const { data } = await api.post("/instance/create", {
+      const { data } = await evolutionApi.post("/instance/create", {
         instanceName: phoneId,
         number: input.phone_number,
         integration: "WHATSAPP-BAILEYS",
@@ -37,7 +35,7 @@ class WhatsappService {
   @Trace({ spanName: "whatsappService.connect" })
   async connect(phoneId: string) {
     try {
-      const { data } = await api.get(`/instance/connect/${phoneId}`);
+      const { data } = await evolutionApi.get(`/instance/connect/${phoneId}`);
       return data;
     } catch (error: any) {
       if (error.status === 404) {
@@ -51,7 +49,7 @@ class WhatsappService {
   @Trace({ spanName: "whatsappService.disconnect" })
   async disconnect(phoneId: string) {
     try {
-      const { data } = await api.delete(`/instance/delete/${phoneId}`);
+      const { data } = await evolutionApi.delete(`/instance/delete/${phoneId}`);
 
       if (!data?.error) {
         await phoneRepo.deletePhone(phoneId);
