@@ -24,6 +24,7 @@ export class UserService {
         tenant_id: input.tenant_id || "42a401e2-7d75-4859-8538-000363fe1b26",
         email: input.email,
         password_hash,
+        cpf: input.cpf,
         created_at: input.created_at || new Date(),
       };
 
