@@ -9,7 +9,7 @@ import { initializeTracing } from "./tracing";
 import { whatsappRoutes } from "./whatsapp/whatsapp.routes";
 import { whatsappController } from "./whatsapp/whatsapp.controller";
 import { configDotenv } from "dotenv";
-import { paymentsRoutes } from "./payments/payments.routes";
+import { asaasWebhookRoutes } from "./asaas-webhook/asaas-webhook.routes";
 
 configDotenv();
 
@@ -28,7 +28,7 @@ router.use(attachAuth);
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/whatsapp", whatsappRoutes);
-router.use("/payments", paymentsRoutes)
+router.use("/asaas", asaasWebhookRoutes);
 
 router.get("/ping", (req, res) => {
   res.send("Pong");
