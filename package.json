@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "generate:checkout":"tsx src/utils/genCheckout.ts",
+    "generate:whatsapp":"tsx src/utils/sendWhatsappMessage.ts",
     "compose:up": "docker compose --env-file .env up -d",
     "compose:down": "docker compose --env-file .env down",
     "start": "dotenv -e .env -- tsx watch src/index.ts",
