@@ -8,6 +8,8 @@ class WhatsappService {
   @Trace({ spanName: "whatsappService.create" })
   async create(input: NewPhone) {
     try {
+      //Can await the id from evolution to save 
+      //Can save with userId to future searchs
       const phoneId = await phoneRepo.insertPhone(input);
 
       const { data } = await evolutionApi.post("/instance/create", {
