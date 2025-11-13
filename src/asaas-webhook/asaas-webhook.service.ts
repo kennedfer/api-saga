@@ -34,20 +34,30 @@ export class AsaasWebhookService {
   @Trace({ spanName: "asaasWebhookService.processPayment" })
   async processPayment(payment: any): Promise<void> {
     //********* mapeia a estrutura do pagamento e salva no historico **********
-    const input = mapWebhookToDb(payment);
-    const entryId = await paymentsHistoryRepo.insertPayment(
-      input as NewPaymentHistory
-    );
+    try {
+      const input = mapWebhookToDb(payment);
+      const entryId = await paymentsHistoryRepo.insertPayment(
+        input as NewPaymentHistory
+      );
 
-    console.log("PAGAMENTO SALVO: " + entryId);
+      console.log("PAGAMENTO SALVO: " + entryId);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Trace({ spanName: "asaasWebhookService.processCheckout" })
   async processCheckout(checkout: any): Promise<void> {
-    const [userId, planId] = checkout.externalReference.split("_");
-    const entryId = await userPlanService.addPlanToUser(userId, planId);
+    try {
+      const [userId, planId] = checkout.externalReference.split("_");
+      const entryId = await userPlanService.addPlanToUser(userId, planId);
 
-    console.log("ASSINATURA DE PLANO SALVA: " + entryId);
+      console.log("ASSINATURA DE PLANO SALVA: " + entryId);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 
